@@ -36,7 +36,7 @@
      <template v-else>
        <div class="col column text-center text-white position-relative">
          <div class="col text-h2 text-weight-thin">
-            What a lovely night
+           What a lovely night
          </div>
           <q-btn @click="getWeatherByLocation" class="col location position-relative" size="1em" flat>
             <q-icon left size="2em" name="my_location" />
@@ -85,25 +85,31 @@ export default {
       }, { timeout: 8000})
     },
     getWeather() {
+      this.$q.loading.show();
       let API = `https://api.openweathermap.org/data/2.5/weather?lat=${this.lat}&lon=${this.lon}&appid=${this.apiKey}&units=metric`;
       this.$axios.get(API)
       .then((res) => {
         this.weatherData = res.data;
         this.errorMessage = null;
+        this.$q.loading.hide();
       })
       .catch((err) => {
         this.errorMessage = err.message;
+        this.$q.loading.hide();
       })
     },
     getWeatherBySearch() {
+      this.$q.loading.show();
        let API = `https://api.openweathermap.org/data/2.5/weather?q=${this.search}&appid=${this.apiKey}&units=metric`;
       this.$axios.get(API)
       .then((res) => {
         this.weatherData = res.data;
         this.errorMessage = null;
+        this.$q.loading.hide();
       })
       .catch((err) => {
         this.errorMessage = `Couldn't find there, sorry`
+        this.$q.loading.hide();
       })
     },
     nullifyError() {

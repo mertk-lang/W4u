@@ -1,6 +1,8 @@
 # Weather4u (weather)
 
-A Quasar Framework app
+Simple weather app built with Vue and Quasar.
+
+Get weather report of either your current location or wherever you want
 
 ## Install the dependencies
 ```bash

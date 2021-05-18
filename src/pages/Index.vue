@@ -10,6 +10,9 @@
             <q-icon @click="getWeatherBySearch" name="search" />
           </template>
           </q-input>
+          <q-banner v-if="this.errorMessage" inline-actions class="q-mt-md text-white bg-red">
+            {{errorMessage}}
+          </q-banner>
      </div>
 
      <template v-if="weatherData">
@@ -66,7 +69,6 @@ export default {
         this.getWeather()
       }, (error) => {
         this.errorMessage = error.message;
-        this.loadingState = false;
       }, { timeout: 8000})
     },
     getWeather() {
@@ -75,12 +77,18 @@ export default {
       .then((res) => {
         this.weatherData = res.data;
       })
+      .catch((err) => {
+        this.errorMessage = err.message;
+      })
     },
     getWeatherBySearch() {
        let API = `https://api.openweathermap.org/data/2.5/weather?q=${this.search}&appid=${this.apiKey}&units=metric`;
       this.$axios.get(API)
       .then((res) => {
         this.weatherData = res.data;
+      })
+      .catch((err) => {
+        this.errorMessage = err.message
       })
     }
   }

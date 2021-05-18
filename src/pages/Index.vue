@@ -1,7 +1,7 @@
 <template>
-  <q-page class="flex column">
+  <q-page class="flex column" :class="bgClass">
      <div class="col q-pa-lg">
-        <q-input v-model="search" @keyup.enter="getWeatherBySearch" dark borderless placeholder="Label">
+        <q-input @click="nullifyError" v-model="search" @keyup.enter="getWeatherBySearch" dark borderless placeholder="Label">
           <template v-slot:before>
             <q-icon name="my_location" @click="getWeatherByLocation" />
           </template>
@@ -61,12 +61,25 @@ export default {
       apiKey: 'db065681ac6cf240c4442a7ce130ce20'
     }
   },
+  computed: {
+    bgClass() {
+      if(this.weatherData){
+        if(this.weatherData.weather[0].icon.endsWith('n')) {
+          return 'bg-night';
+        }
+        else {
+          return 'bg-day';
+        }
+      }
+    }
+  },
   methods: {
     getWeatherByLocation() {
       navigator.geolocation.getCurrentPosition((position) => {
         this.lat = position.coords.latitude;
         this.lon = position.coords.longitude;
         this.getWeather()
+        this.errorMessage = null;
       }, (error) => {
         this.errorMessage = error.message;
       }, { timeout: 8000})
@@ -76,6 +89,7 @@ export default {
       this.$axios.get(API)
       .then((res) => {
         this.weatherData = res.data;
+        this.errorMessage = null;
       })
       .catch((err) => {
         this.errorMessage = err.message;
@@ -86,10 +100,14 @@ export default {
       this.$axios.get(API)
       .then((res) => {
         this.weatherData = res.data;
+        this.errorMessage = null;
       })
       .catch((err) => {
-        this.errorMessage = err.message
+        this.errorMessage = `Couldn't find there, sorry`
       })
+    },
+    nullifyError() {
+      this.errorMessage = '';
     }
   }
 }
@@ -97,7 +115,11 @@ export default {
 
 <style lang="sass">
   .q-page
-    background: linear-gradient(to top, #4e54c8, #8f94fb)
+    background: linear-gradient(to bottom, #43cea2, #185a9d)
+    &.bg-day
+      background: linear-gradient(to top, #4e54c8, #8f94fb)
+    &.bg-night
+      background: linear-gradient(to top, #0f2027, #203a43, #2c5364)
 
   .degree
     top: -38px

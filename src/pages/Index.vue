@@ -75,7 +75,17 @@ export default {
   },
   methods: {
     getWeatherByLocation() {
-      navigator.geolocation.getCurrentPosition((position) => {
+      if(this.$q.platform.is.electron) {
+        this.$axios.get('https://freegeoip.app/json/')
+        .then((res) => {
+          this.lat = res.data.latitude;
+          this.lon = res.data.longitude;
+          this.getWeather()
+        })
+      }
+
+      else {
+        navigator.geolocation.getCurrentPosition((position) => {
         this.lat = position.coords.latitude;
         this.lon = position.coords.longitude;
         this.getWeather()
@@ -83,6 +93,7 @@ export default {
       }, (error) => {
         this.errorMessage = error.message;
       }, { timeout: 8000})
+      }
     },
     getWeather() {
       this.$q.loading.show();

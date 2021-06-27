@@ -4,6 +4,8 @@ Simple weather app built with Vue and Quasar.
 
 Get weather report of either your current location or wherever you want
 
+https://elastic-mcclintock-171b34.netlify.app/#/
+
 ## Install the dependencies
 ```bash
 npm install
